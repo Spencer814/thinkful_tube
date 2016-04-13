@@ -1,4 +1,4 @@
-$(document).ready(function () { 
+$(document).ready(function () {
 	// This function gets the data from the YouTube API and displays it on the page
 	function getResults(searchTerm) {
 		$.getJSON("https://www.googleapis.com/youtube/v3/search",
@@ -9,7 +9,7 @@ $(document).ready(function () {
 				"maxResults": 50
 			},
 			function (data) {
-				if (data.pageInfo.totalResults == 0) {
+				if (data.pageInfo.totalResults === 0) {
 					alert("No results!");
 				}
 				// If no results, empty the list
@@ -37,4 +37,3 @@ $(document).ready(function () {
 		getResults($("#search-term").val());
 	});
 });
-

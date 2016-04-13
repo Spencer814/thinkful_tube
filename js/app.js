@@ -1,40 +1,50 @@
-$(document).ready(function () { 
-	// This function gets the data from the YouTube API and displays it on the page
-	function getResults(searchTerm) {
-		$.getJSON("https://www.googleapis.com/youtube/v3/search",
-			{
-				"part": "snippet",
-				"key": "AIzaSyCSCx9g1gbpd9A8QT8dSi4ZeQu8juacFP8",
-				"q": searchTerm,
-				"maxResults": 50
-			},
-			function (data) {
-				if (data.pageInfo.totalResults == 0) {
-					alert("No results!");
-				}
-				// If no results, empty the list
-				displayResults(data.items);
-			}
-		);
-	}
+// angular.module('flickrApp', [])
+// .config(function($httpProvider){
+//   $httpProvider.defaults.useXDomain = true;
+// })
+//
+// .controller('flickrController', function($scope, $http){
+//   var url = "https://api.flickr.com/services/rest";
+//   var params = {
+//     method: "flickr.photos.search",
+//     api_key: "03f566bb6d192c19c91ade74612807c4",
+//     tags: search_tag,
+//     format: "json",
+//     nojsoncallback: 1
+//   };
+//   $http({
+//     method: "GET",
+//     url: url,
+//     params: params
+//   })
+//   .then(function(response){
+//     $scope.results = response.data.photos.photo;
+//   },
+//   function(response){
+//     alert('error');
+//   });
+// });
+//
+//
 
-	//Display results in ul
-	function displayResults(videos) {
-		var html = "";
-		$.each(videos, function (index, video) {
-			// Append results li to ul
-			console.log(video.snippet.title);
-			console.log(video.snippet.thumbnails.high.url);
-			html = html + "<li><p class='line-clamp'>" + video.snippet.title +
-				"</p><a target='_blank' href='https://www.youtube.com/watch?v=" + video.id.videoId + "'><img src='" +  video.snippet.thumbnails.high.url + "'/></a></li>" ;
-		});
-		$("#search-results ul").html(html);
-	}
+var flickrApp = angular.module('flickrApp',[]);
 
-	//Use search term
-	$("#search-form").submit(function (event) {
-		event.preventDefault();
-		getResults($("#search-term").val());
-	});
+flickrApp.config(function($httpProvider){
+  $httpProvider.defaults.useXDomain = true;
 });
 
+flickrApp.controller("flickrController", function ($scope, $http) {
+    $scope.loading = false;
+    $scope.getPhotos = function (search_tag) {
+      $scope.loading = true;
+      $http.jsonp("https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=03f566bb6d192c19c91ade74612807c4&tags="+search_tag+"&format=json&jsoncallback=JSON_CALLBACK")
+        .then(function (data) {
+          $scope.images = response.data.photos.photo;
+          $scope.loading = false;
+        }).
+        error(function (data) {
+          $scope.images = "Request failed";
+          $scope.loading = false;
+        });
+    };
+});
